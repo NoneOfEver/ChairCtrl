@@ -35,13 +35,10 @@ void CAN1SendTask(void *pvParameters)
         // 先取出要发送的数据,使得"发送任务统一出栈"
         if (xQueueReceive(CAN1_TxQueue, &txMsg, portMAX_DELAY) == pdPASS)
         {
-            uint8_t data[8] = {0x01, 0xF6, 0x01, 0x05, 0xDC, 0x01, 0x00, 0x6B};
-            memcpy(txMsg.Data, data, 8);
             while (CAN_Transmit(CAN1, &txMsg) == CAN_NO_MB)
             {
-                // 只有在邮箱满了才等待中断通知
                 ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-            }        
+            }
         }
     }
 }
@@ -55,20 +52,18 @@ BaseType_t CAN1_SendMessage(CanTxMsg *msg, TickType_t ticksToWait)
 }
 static void TEST_CAN1_Tx()
 {
-    
-    CanTxMsg txMsg;
-    // uint8_t command[8] = {0x01,0xF6,0x01,0x05,0xDC,0x01,0x00,0x6B};
- 
-    //uint8_t command[8] = {0x01,0xF3,0xAB,0x01,0x00,0x6B};
-    txMsg.ExtId = 0x01<<8;
+    CanTxMsg txMsg = {0};  // 清零整个结构体，防止脏数据
+    uint8_t data[8] = {0x01, 0xF6, 0x01, 0x05, 0xDC, 0x01, 0x00, 0x6B};
+
+    txMsg.ExtId = 0x01 << 8;
     txMsg.IDE = CAN_Id_Extended;
     txMsg.RTR = CAN_RTR_Data;
     txMsg.DLC = 8;
-    // memcpy(txMsg.Data, (command), 8);
+    memcpy(txMsg.Data, data, 8);  // 在这里就准备好内容
 
-    CAN1_SendMessage(&txMsg, 10);  // 放进去，10个tick超时
-
+    CAN1_SendMessage(&txMsg, 10);  // 放进队列
 }
+
 
 void TEST_CAN1_Tx_Task(void *pvParameters)
 {

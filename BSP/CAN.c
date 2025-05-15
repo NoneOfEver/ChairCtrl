@@ -121,7 +121,7 @@ void CAN2_Mode_Init(void)
 	CAN_InitSturcture.CAN_SJW = CAN_SJW_1tq;//1		
 	CAN_InitSturcture.CAN_BS1 = CAN_BS1_6tq;		
 	CAN_InitSturcture.CAN_BS2 = CAN_BS2_5tq;		
-	CAN_InitSturcture.CAN_Prescaler = 48;//16		
+	CAN_InitSturcture.CAN_Prescaler =48;//16		
 	CAN_Init(CAN2, &CAN_InitSturcture);
 	
 	CAN_FilterInitSturcture.CAN_FilterNumber = 14;		
