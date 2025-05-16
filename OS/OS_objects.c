@@ -1,7 +1,7 @@
 #include "OS_objects.h"
 #include "UART.h"
 #include "CAN.h"
-
+#include "Task_LegCtrl.h"
 /*****************************************
                 Queue
 ******************************************/
@@ -21,6 +21,8 @@ QueueHandle_t CAN1_RxQueue;
 QueueHandle_t CAN1_TxQueue;
 QueueHandle_t CAN2_RxQueue;
 QueueHandle_t CAN2_TxQueue;
+
+xQueueHandle MotorCtrlQueue;
 /*****************************************
                 Semaphore
 ******************************************/
@@ -35,7 +37,7 @@ SemaphoreHandle_t uart6_tx_done_semaphore;
 ***************************/
 TaskHandle_t CAN1_Send_Task_Handler;
 TaskHandle_t CAN1_Recv_Task_Handler;
-TaskHandle_t TEST_CAN1_Tx_Task_Handler;
+TaskHandle_t Motor_CAN1_Send_Task_Handler;
 TaskHandle_t CAN2_Send_Task_Handler;
 TaskHandle_t CAN2_Recv_Task_Handler;
 TaskHandle_t TEST_CAN2_Tx_Task_Handler;
@@ -67,6 +69,7 @@ void OSObjects_Init(void)
     CAN2_RxQueue = xQueueCreate(20, sizeof(CanRxMsg));
     CAN2_TxQueue = xQueueCreate(20, sizeof(CanTxMsg));
 
+    MotorCtrlQueue = xQueueCreate(10, sizeof(MotorCtrlCommand_t));
     // 发送完成信号量，初始设为"可用"
     uart1_tx_done_semaphore = xSemaphoreCreateBinary();
     xSemaphoreGive(uart1_tx_done_semaphore);

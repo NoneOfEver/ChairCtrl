@@ -25,6 +25,7 @@ extern QueueHandle_t CAN1_TxQueue;
 extern QueueHandle_t CAN2_TxQueue;
 extern QueueHandle_t CAN2_RxQueue;
 
+extern xQueueHandle MotorCtrlQueue;
 /*****************************************
                 Semaphore
 ******************************************/
@@ -39,7 +40,7 @@ extern SemaphoreHandle_t uart6_tx_done_semaphore;
 ***************************/
 extern TaskHandle_t CAN1_Send_Task_Handler;
 extern TaskHandle_t CAN1_Recv_Task_Handler;
-extern TaskHandle_t TEST_CAN1_Tx_Task_Handler;
+extern TaskHandle_t Motor_CAN1_Send_Task_Handler;
 extern TaskHandle_t CAN2_Send_Task_Handler;
 extern TaskHandle_t CAN2_Recv_Task_Handler;
 extern TaskHandle_t TEST_CAN2_Tx_Task_Handler;

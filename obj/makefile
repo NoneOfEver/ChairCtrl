@@ -64,7 +64,7 @@ main-build: MainCtrl_OS.elf secondary-outputs
 
 # Tool invocations
 MainCtrl_OS.elf: $(OBJS) $(USER_OBJS)
-	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -fmax-errors=20 -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized -g -T "c:/Users/noneo/Desktop/Proj_SmartChair/Center/Ld/Link.ld" -nostartfiles -Xlinker --gc-sections -Xlinker --print-memory-usage -Wl,-Map,"MainCtrl_OS.map" --specs=nano.specs --specs=nosys.specs -o "MainCtrl_OS.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@	riscv-none-embed-gcc -march=rv32imacxw -mabi=ilp32 -msmall-data-limit=8 -msave-restore -fmax-errors=20 -Os -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common -Wunused -Wuninitialized -g -T "/Users/panpoming/Documents/ChairCtrl/ChairCtrl/Ld/Link.ld" -nostartfiles -Xlinker --gc-sections -Xlinker --print-memory-usage -Wl,-Map,"MainCtrl_OS.map" --specs=nano.specs --specs=nosys.specs -o "MainCtrl_OS.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 MainCtrl_OS.hex: MainCtrl_OS.elf
 	@	riscv-none-embed-objcopy -O ihex "MainCtrl_OS.elf" "MainCtrl_OS.hex"
 MainCtrl_OS.lst: MainCtrl_OS.elf

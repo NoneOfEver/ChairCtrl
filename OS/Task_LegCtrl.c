@@ -50,34 +50,72 @@ BaseType_t CAN1_SendMessage(CanTxMsg *msg, TickType_t ticksToWait)
 
     return xQueueSend(CAN1_TxQueue, msg, ticksToWait);
 }
-static void TEST_CAN1_Tx()
+
+BaseType_t SendMotorCommandToQueue(const MotorCtrlCommand_t *cmd, TickType_t ticksToWait)
 {
-    uint8_t data[13] = {0xFD, 0x00, 0x03, 0xA0, 0x00, 0x00, 0x00, 0xF0, 0xFD, 0x00, 0x00,0x00, 0x6B};
+    if (cmd == NULL)
+        return pdFAIL;
 
-    // 第一帧
-    CanTxMsg txMsg1 = {0};
-    txMsg1.ExtId = 0x0100;  // 第一帧ID
-    txMsg1.IDE = CAN_Id_Extended;
-    txMsg1.RTR = CAN_RTR_Data;
-    txMsg1.DLC = 8;
-    memcpy(txMsg1.Data, data, 8);  // 拷贝前8字节
-    CAN1_SendMessage(&txMsg1, 10);
-
-    // 第二帧
-    CanTxMsg txMsg2 = {0};
-    txMsg2.ExtId = 0x0101;  // 第二帧ID
-    txMsg2.IDE = CAN_Id_Extended;
-    txMsg2.RTR = CAN_RTR_Data;
-    txMsg2.DLC = 5;  // 只剩下4字节
-    memcpy(txMsg2.Data, data + 8, 5);  // 拷贝后4字节
-    CAN1_SendMessage(&txMsg2, 10);
+    return xQueueSend(MotorCtrlQueue, cmd, ticksToWait);
 }
 
-void TEST_CAN1_Tx_Task(void *pvParameters)
+void Example_SendMotorCommands()
 {
-    for(;;)
+    static uint8_t motor0Cmd[] = {0xFD, 0x00, 0x01, 0xDC, 0x00, 0x00, 0x00, 0xF0, 0x01, 0x02, 0x03};  // 11字节
+    static uint8_t motor1Cmd[] = {0xFD, 0x00, 0x01, 0xDC, 0x10, 0x00, 0x00};                           // 7字节
+    static uint8_t motor2Cmd[] = {0xFD, 0x00, 0x01, 0xDC, 0x20};                                        // 5字节
+    static uint8_t motor3Cmd[] = {0xFD, 0x00, 0x01, 0xDC, 0x30, 0x40, 0x50, 0x60, 0x70};                // 9字节
+
+    MotorCtrlCommand_t cmd = {
+        .motorCmds = {motor0Cmd, motor1Cmd, motor2Cmd, motor3Cmd},
+        .cmdLens = {sizeof(motor0Cmd), sizeof(motor1Cmd), sizeof(motor2Cmd), sizeof(motor3Cmd)}
+    };
+
+    SendMotorCommandToQueue(&cmd, 10);
+}
+
+void MotorCAN1SendTask(void *pvParameters)
+{
+    MotorCtrlCommand_t motorCmd;
+
+    for (;;)
     {
-        TEST_CAN1_Tx();
-        vTaskDelay(10000);
+        if (xQueueReceive(MotorCtrlQueue, &motorCmd, portMAX_DELAY) == pdPASS)
+        {
+            for (uint8_t motorIndex = 0; motorIndex < 4; motorIndex++)
+            {
+                uint32_t baseID = (motorIndex + 1) << 8;  // 0x0100, 0x0200, 0x0300, 0x0400
+                uint8_t *data = motorCmd.motorCmds[motorIndex];
+                uint16_t length = motorCmd.cmdLens[motorIndex];
+
+                if (data == NULL || length == 0) continue;
+
+                uint16_t offset = 0;
+                uint8_t frameIndex = 0;
+
+                while (offset < length)
+                {
+                    CanTxMsg txMsg = {0};
+                    txMsg.ExtId = baseID + frameIndex;
+                    txMsg.IDE = CAN_Id_Extended;
+                    txMsg.RTR = CAN_RTR_Data;
+
+                    uint8_t bytesToSend = (length - offset >= 8) ? 8 : (length - offset);
+                    txMsg.DLC = bytesToSend;
+
+                    memcpy(txMsg.Data, data + offset, bytesToSend);
+
+                    // 放进发送队列
+                    if (CAN1_SendMessage(&txMsg, 10) != pdPASS)
+                    {
+                        // 可选：记录发送失败
+                    }
+
+                    offset += bytesToSend;
+                    frameIndex++;
+                }
+            }
+        }
     }
 }
+

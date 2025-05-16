@@ -27,8 +27,8 @@
 #define CAN1_RECV_TASK_PRIO                      5
 #define CAN1_RECV_TASK_STK_SIZE                  256
 
-#define TEST_CAN1_TX_TASK_PRIO                   4
-#define TEST_CAN1_TX_TASK_STK_SIZE               256
+#define MOTOR_CAN1_SEND_TASK_PRIO                   4
+#define MOTOR_CAN1_SEND_TASK_STK_SIZE               256
 
 #define CAN2_SEND_TASK_PRIO                      4
 #define CAN2_SEND_TASK_STK_SIZE                  256
@@ -83,12 +83,12 @@ void OS_Entry()
        //               (void*          )NULL,
        //               (UBaseType_t    )CAN1_RECV_TASK_PRIO,
        //               (TaskHandle_t*  )&CAN1_Recv_Task_Handler);
-       xTaskCreate((TaskFunction_t )TEST_CAN1_Tx_Task,
-                     (const char*    )"TEST_CAN1_Tx_Task",
-                     (uint16_t       )TEST_CAN1_TX_TASK_STK_SIZE,
+       xTaskCreate((TaskFunction_t )MotorCAN1SendTask,
+                     (const char*    )"Motor_CAN1_Send_Task",
+                     (uint16_t       )MOTOR_CAN1_SEND_TASK_STK_SIZE,
                      (void*          )NULL,
-                     (UBaseType_t    )TEST_CAN1_TX_TASK_PRIO,
-                     (TaskHandle_t*  )&TEST_CAN1_Tx_Task_Handler);
+                     (UBaseType_t    )MOTOR_CAN1_SEND_TASK_PRIO,
+                     (TaskHandle_t*  )&Motor_CAN1_Send_Task_Handler);
 
        xTaskCreate((TaskFunction_t )CAN2SendTask,
                      (const char*    )"CAN2_Send_Task",
