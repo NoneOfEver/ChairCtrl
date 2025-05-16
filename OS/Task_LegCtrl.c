@@ -52,24 +52,32 @@ BaseType_t CAN1_SendMessage(CanTxMsg *msg, TickType_t ticksToWait)
 }
 static void TEST_CAN1_Tx()
 {
-    CanTxMsg txMsg = {0};  // 清零整个结构体，防止脏数据
-    uint8_t data[8] = {0x01, 0xF6, 0x01, 0x05, 0xDC, 0x01, 0x00, 0x6B};
+    uint8_t data[13] = {0xFD, 0x00, 0x03, 0xA0, 0x00, 0x00, 0x00, 0xF0, 0xFD, 0x00, 0x00,0x00, 0x6B};
 
-    txMsg.ExtId = 0x01 << 8;
-    txMsg.IDE = CAN_Id_Extended;
-    txMsg.RTR = CAN_RTR_Data;
-    txMsg.DLC = 8;
-    memcpy(txMsg.Data, data, 8);  // 在这里就准备好内容
+    // 第一帧
+    CanTxMsg txMsg1 = {0};
+    txMsg1.ExtId = 0x0100;  // 第一帧ID
+    txMsg1.IDE = CAN_Id_Extended;
+    txMsg1.RTR = CAN_RTR_Data;
+    txMsg1.DLC = 8;
+    memcpy(txMsg1.Data, data, 8);  // 拷贝前8字节
+    CAN1_SendMessage(&txMsg1, 10);
 
-    CAN1_SendMessage(&txMsg, 10);  // 放进队列
+    // 第二帧
+    CanTxMsg txMsg2 = {0};
+    txMsg2.ExtId = 0x0101;  // 第二帧ID
+    txMsg2.IDE = CAN_Id_Extended;
+    txMsg2.RTR = CAN_RTR_Data;
+    txMsg2.DLC = 5;  // 只剩下4字节
+    memcpy(txMsg2.Data, data + 8, 5);  // 拷贝后4字节
+    CAN1_SendMessage(&txMsg2, 10);
 }
-
 
 void TEST_CAN1_Tx_Task(void *pvParameters)
 {
     for(;;)
     {
         TEST_CAN1_Tx();
-        vTaskDelay(1000);
+        vTaskDelay(10000);
     }
 }

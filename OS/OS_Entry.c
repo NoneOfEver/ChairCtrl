@@ -77,12 +77,12 @@ void OS_Entry()
                      (void*          )NULL,
                      (UBaseType_t    )CAN1_SEND_TASK_PRIO,
                      (TaskHandle_t*  )&CAN1_Send_Task_Handler);
-       xTaskCreate((TaskFunction_t )CAN1RecvTask,
-                     (const char*    )"CAN1_Recv_Task",
-                     (uint16_t       )CAN1_RECV_TASK_STK_SIZE,
-                     (void*          )NULL,
-                     (UBaseType_t    )CAN1_RECV_TASK_PRIO,
-                     (TaskHandle_t*  )&CAN1_Recv_Task_Handler);
+       // xTaskCreate((TaskFunction_t )CAN1RecvTask,
+       //               (const char*    )"CAN1_Recv_Task",
+       //               (uint16_t       )CAN1_RECV_TASK_STK_SIZE,
+       //               (void*          )NULL,
+       //               (UBaseType_t    )CAN1_RECV_TASK_PRIO,
+       //               (TaskHandle_t*  )&CAN1_Recv_Task_Handler);
        xTaskCreate((TaskFunction_t )TEST_CAN1_Tx_Task,
                      (const char*    )"TEST_CAN1_Tx_Task",
                      (uint16_t       )TEST_CAN1_TX_TASK_STK_SIZE,

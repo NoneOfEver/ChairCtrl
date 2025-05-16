@@ -62,10 +62,10 @@ void OSObjects_Init(void)
     uart6_tx_packet_queue = xQueueCreate(10, sizeof(UART_TxPacket_t));
     
     // 创建接收队列（深度20，可自己调）
-    CAN1_RxQueue = xQueueCreate(20, sizeof(CAN_Message_t));
-    CAN1_TxQueue = xQueueCreate(20, sizeof(CAN_Message_t));
-    CAN2_RxQueue = xQueueCreate(20, sizeof(CAN_Message_t));
-    CAN2_TxQueue = xQueueCreate(20, sizeof(CAN_Message_t));
+    CAN1_RxQueue = xQueueCreate(20, sizeof(CanRxMsg));
+    CAN1_TxQueue = xQueueCreate(20, sizeof(CanTxMsg));
+    CAN2_RxQueue = xQueueCreate(20, sizeof(CanRxMsg));
+    CAN2_TxQueue = xQueueCreate(20, sizeof(CanTxMsg));
 
     // 发送完成信号量，初始设为"可用"
     uart1_tx_done_semaphore = xSemaphoreCreateBinary();
