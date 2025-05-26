@@ -8,6 +8,7 @@ extern "C"{
 #include "task.h"
 #include "OS_objects.h"
 
+#define ONE_CIRCLE 3200
 typedef struct
 {
     uint8_t *motorCmds[4];   // 每个电机一个命令指针
@@ -28,7 +29,10 @@ void CAN1RecvTask(void *pvParameters);
  */
 void CAN1SendTask(void *pvParameters);
 
-void Example_SendMotorCommands();
+void SendMotorCommands(uint32_t motor0_len,uint8_t motor0_dir,
+                        uint32_t motor1_len,uint8_t motro1_dir,
+                        uint32_t motor2_len,uint8_t motor2_dir,
+                        uint32_t motor3_len,uint8_t motor3_dir);
 
 void MotorCAN1SendTask(void *pvParameters);
 BaseType_t SendMotorCommandToQueue(const MotorCtrlCommand_t *cmd, TickType_t ticksToWait);

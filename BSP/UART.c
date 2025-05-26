@@ -331,6 +331,9 @@ void UART4_Init(void)
 
     USART_DMACmd(UART4,USART_DMAReq_Rx|USART_DMAReq_Tx,ENABLE);
     USART_Cmd(UART4,ENABLE);
+    // 默认接收方向
+    GPIO_ResetBits(GPIOC, GPIO_Pin_12);  // RE+DE = 0，接收模式
+
 }
 
 void UART6_Init(void)

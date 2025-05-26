@@ -5,12 +5,12 @@
 			"type": "mrs-debugger",
 			"request": "launch",
 			"name": "MainCtrl_OS",
-			"cwd": "c:\\Users\\noneo\\Desktop\\Proj_SmartChair\\Center",
+			"cwd": "/Users/panpoming/Documents/ChairCtrl/ChairCtrl",
 			"openOCDCfg": {
 				"useLocalOpenOCD": true,
-				"executable": "d:/MounRiver_Studio2/resources/app/resources/win32/components/WCH/OpenOCD/OpenOCD/bin/openocd.exe",
+				"executable": "/Applications/MounRiver Studio 2.app/Contents/Resources/app/resources/darwin/components/WCH/OpenOCD/OpenOCD/bin/openocd",
 				"configOptions": [
-					"-f \"d:/MounRiver_Studio2/resources/app/resources/win32/components/WCH/OpenOCD/OpenOCD/bin/wch-riscv.cfg\" -c \"chip_id CH32V30x\""
+					"-f \"/Applications/MounRiver Studio 2.app/Contents/Resources/app/resources/darwin/components/WCH/OpenOCD/OpenOCD/bin/wch-riscv.cfg\" -c \"chip_id CH32V30x\""
 				],
 				"gdbport": 3333,
 				"telnetport": 4444,
@@ -22,7 +22,7 @@
 				"enableNoZeroWaitingAreaFlash": false
 			},
 			"gdbCfg": {
-				"executable": "d:/MounRiver_Studio2/resources/app/resources/win32/components/WCH/Toolchain/RISC-V Embedded GCC/bin/riscv-none-embed-gdb.exe",
+				"executable": "/Applications/MounRiver Studio 2.app/Contents/Resources/app/resources/darwin/components/WCH/Toolchain/RISC-V Embedded GCC/bin/riscv-none-embed-gdb",
 				"commands": [
 					"set mem inaccessible-by-default off",
 					"set architecture riscv:rv32",
@@ -39,8 +39,8 @@
 					"additionalCommands": []
 				},
 				"loadedFiles": {
-					"executableFile": "c:\\Users\\noneo\\Desktop\\Proj_SmartChair\\Center\\obj\\MainCtrl_OS.elf",
-					"symbolFile": "c:\\Users\\noneo\\Desktop\\Proj_SmartChair\\Center\\obj\\MainCtrl_OS.elf",
+					"executableFile": "/Users/panpoming/Documents/ChairCtrl/ChairCtrl/obj/MainCtrl_OS.elf",
+					"symbolFile": "/Users/panpoming/Documents/ChairCtrl/ChairCtrl/obj/MainCtrl_OS.elf",
 					"executableFileOffset": 0,
 					"symbolFileOffset": 0
 				},
@@ -54,7 +54,7 @@
 				},
 				"debugInRAM": false
 			},
-			"svdpath": "d:\\MounRiver_Studio2\\resources\\app\\resources\\win32\\components\\WCH\\SDK\\default/RISC-V/CH32V307/NoneOS/CH32V307xx.svd",
+			"svdpath": "/Applications/MounRiver Studio 2.app/Contents/Resources/app/resources/darwin/components/WCH/SDK/default/RISC-V/CH32V307/NoneOS/CH32V307xx.svd",
 			"output": {
 				"showDebugGDBTrace": true,
 				"saveDebugOutputToFile": false,
